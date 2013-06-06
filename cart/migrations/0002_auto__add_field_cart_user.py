@@ -10,7 +10,7 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         # Adding field 'Cart.user'
         db.add_column(u'cart_cart', 'user',
-                      self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True, null=True, blank=True),
+                      self.gf('django.db.models.fields.related.OneToOneField')(to=orm['core.User'], unique=True, null=True, blank=True),
                       keep_default=False)
 
 
@@ -54,7 +54,7 @@ class Migration(SchemaMigration):
             'checked_out': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'creation_date': ('django.db.models.fields.DateTimeField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'user': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True', 'null': 'True', 'blank': 'True'})
+            'user': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.User']", 'unique': 'True', 'null': 'True', 'blank': 'True'})
         },
         u'cart.item': {
             'Meta': {'ordering': "('cart',)", 'object_name': 'Item'},
