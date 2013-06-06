@@ -2,7 +2,9 @@ from django.contrib.auth.models import AnonymousUser
 
 import datetime
 import models
-from core.models import User
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
 
 CART_ID = 'CART-ID'
 
@@ -70,7 +72,7 @@ class Cart:
             item.quantity = quantity
             item.save()
         else:
-            item.quantity=item.quantity+quantity
+            item.quantity += quantity
             item.save()
 
     def remove(self, product):
@@ -98,4 +100,3 @@ class Cart:
     def clear(self):
         for item in self.cart.item_set:
             item.delete()
-
