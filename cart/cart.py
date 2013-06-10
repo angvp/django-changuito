@@ -2,8 +2,11 @@ from django.contrib.auth.models import AnonymousUser
 
 import datetime
 import models
-from django.contrib.auth import get_user_model
-User = get_user_model()
+try:
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+except:
+    from django.contrib.auth.models import User
 
 
 CART_ID = 'CART-ID'
@@ -14,6 +17,10 @@ class ItemAlreadyExists(Exception):
 
 
 class ItemDoesNotExist(Exception):
+    pass
+
+
+class CartDoesNotExist(Exception):
     pass
 
 
@@ -96,6 +103,15 @@ class Cart:
             item.save()
         except models.Item.DoesNotExist:
             raise ItemDoesNotExist
+
+    def merge(self, cart_id, user):
+        try:
+            cart = models.Cart.objects.get(pk=cart_id)
+            cart.user = user
+            cart.save()
+        except models.Cart.DoesNotExist:
+            raise ItemDoesNotExist
+
 
     def clear(self):
         for item in self.cart.item_set:
