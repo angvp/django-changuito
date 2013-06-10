@@ -1,12 +1,17 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes import generic
+#from django.contrib.contenttypes import generic
 
-from django.conf import settings
+try:
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+except:
+    from django.contrib.auth.models import User
+
 
 class Cart(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, null=True, blank=True)
+    user = models.OneToOneField(User, null=True, blank=True)
     creation_date = models.DateTimeField(verbose_name=_('creation date'))
     checked_out = models.BooleanField(default=False, verbose_name=_('checked out'))
 
@@ -62,4 +67,3 @@ class Item(models.Model):
         self.object_id = product.pk
 
     product = property(get_product, set_product)
-
