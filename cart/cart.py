@@ -51,7 +51,7 @@ class Cart:
             yield item
 
     @classmethod
-    def getCart(self, request):
+    def get_cart(self, request):
         cart_id = request.session.get(CART_ID)
         if cart_id:
             cart = models.Cart.objects.get(id=cart_id, checked_out=False)

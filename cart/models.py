@@ -21,10 +21,10 @@ class Cart(models.Model):
         ordering = ('-creation_date',)
 
     def __unicode__(self):
-        return unicode(self.creation_date)
+        return "Cart id: %s" % self.id
 
     def is_empty(self):
-        return self.item_set.count == 0
+        return self.item_set.count() == 0
 
 
 class ItemManager(models.Manager):
