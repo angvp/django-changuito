@@ -26,6 +26,10 @@ class Cart(models.Model):
     def is_empty(self):
         return self.item_set.count() == 0
 
+    def total_price(self):
+        x = [y.total_price for y in Item.objects.filter(cart=self)]
+        return sum(x)
+
 
 class ItemManager(models.Manager):
     def get(self, *args, **kwargs):
