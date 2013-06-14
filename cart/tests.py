@@ -1,8 +1,11 @@
 from django.test import TestCase
 from models import Cart, Item
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
 import datetime
 from decimal import Decimal
+from django.http import HttpRequest
+
+from cart import Cart as CartManager
 
 
 class CartAndItemModelsTestCase(TestCase):
@@ -130,3 +133,61 @@ class CartAndItemModelsTestCase(TestCase):
         self._create_item_in_database(cart, product=user, quantity=2, unit_price=Decimal("150"))
 
         self.assertEquals(cart.total_price(), 400)
+
+
+class CartManagerTestCase(TestCase):
+    # Let's re-use some functions from the Model Test :)
+    def _create_cart_in_request(self, creation_date=datetime.datetime.now(),
+            checked_out=False):
+        """
+            Helper function so I don't repeat myself
+        """
+        r = HttpRequest()
+        r.session = {}
+        r.user = AnonymousUser()
+        cart = CartManager(r)
+        return cart
+
+    def _create_item_in_database(self, cart, product, quantity=1,
+            unit_price=Decimal("100")):
+        """
+            Helper function so I don't repeat myself
+        """
+        item = Item()
+        item.cart = cart
+        item.product = product
+        item.quantity = quantity
+        item.unit_price = unit_price
+        item.save()
+
+        return item
+
+    def _create_user_in_database(self):
+        """
+            Helper function so I don't repeat myself
+        """
+        user = User(username="user_for_sell", password="sold",
+                email="example@example.com")
+        user.save()
+        return user
+
+    def test_cart_in_request(self):
+        cart = self._create_cart_in_request()
+        self.assertEquals(cart.cart.id, 1)
+
+    def test_cart_user_is_anonymous(self):
+        cart = self._create_cart_in_request()
+        self.assertEquals(cart.cart.user, None)
+
+    def test_cart_merge_user_anonuser(self):
+        # anonymous user
+        cart = self._create_cart_in_request()
+        # registered user
+        user = self._create_user_in_database()
+        # let's create an item
+        item = self._create_item_in_database(cart.cart, product=user, quantity=3, unit_price=100)
+        # let's merge with the user that we created on the db
+        cart = cart.merge(cart.cart.id, user)
+        self.assertEquals(cart.id, 1)
+        self.assertEquals(cart.user, user)
+
