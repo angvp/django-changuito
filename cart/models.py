@@ -27,8 +27,7 @@ class Cart(models.Model):
         return self.item_set.count() == 0
 
     def total_price(self):
-        x = [y.total_price for y in Item.objects.filter(cart=self)]
-        return sum(x)
+        return sum(i.total_price for i in self.item_set.all())
 
 
 class ItemManager(models.Manager):
