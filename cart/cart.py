@@ -104,13 +104,21 @@ class Cart:
         except models.Item.DoesNotExist:
             raise ItemDoesNotExist
 
+    def delete_old_cart(user):
+        try:
+            cart = models.Cart.objects.get(user=user)
+            cart.delete()
+        except:
+            pass
+
     def merge(self, cart_id, user):
         try:
+            delete_old_cart(user)
             cart = models.Cart.objects.get(pk=cart_id)
             cart.user = user
             cart.save()
         except models.Cart.DoesNotExist:
-            raise ItemDoesNotExist
+            raise CartDoesNotExist
 
 
     def clear(self):
