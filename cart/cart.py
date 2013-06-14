@@ -113,7 +113,7 @@ class Cart:
 
     def merge(self, cart_id, user):
         try:
-            delete_old_cart(user)
+            self.delete_old_cart(user)
             cart = models.Cart.objects.get(pk=cart_id)
             cart.user = user
             cart.save()
