@@ -191,3 +191,12 @@ class CartManagerTestCase(TestCase):
         self.assertEquals(cart.id, 1)
         self.assertEquals(cart.user, user)
 
+    def test_cart_clear(self):
+        cart = self._create_cart_in_request()
+        user = self._create_user_in_database()
+        item = self._create_item_in_database(cart.cart, product=user, quantity=3, unit_price=100)
+        self.assertEquals(cart.cart.is_empty(), False)
+        cart.clear()
+        self.assertEquals(cart.cart.is_empty(), True)
+
+
