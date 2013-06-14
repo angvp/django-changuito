@@ -24,6 +24,10 @@ class CartDoesNotExist(Exception):
     pass
 
 
+class UserDoesNotExist(Exception):
+    pass
+
+
 class Cart:
     def __init__(self, request):
         user = request.user
@@ -104,21 +108,24 @@ class Cart:
         except models.Item.DoesNotExist:
             raise ItemDoesNotExist
 
-    def delete_old_cart(user):
+    def delete_old_cart(self, user):
         try:
             cart = models.Cart.objects.get(user=user)
             cart.delete()
-        except:
+        except models.Cart.DoesNotExist:
             pass
 
-    def merge(self, cart_id, user):
+    def merge(self, cart_id, new_user):
         try:
-            self.delete_old_cart(user)
+            self.delete_old_cart(new_user)
             cart = models.Cart.objects.get(pk=cart_id)
-            cart.user = user
+            cart.user = new_user
             cart.save()
+            return cart
         except models.Cart.DoesNotExist:
             raise CartDoesNotExist
+
+        return None
 
 
     def clear(self):
