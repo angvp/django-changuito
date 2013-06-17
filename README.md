@@ -1,6 +1,13 @@
 # Introduction
 
-django-cart is a very simple application that just let you add and remove items from a session based cart. django-cart uses the power of the Django content type framework to enable you to have your own Product model and associate with the cart without having to change anything. Please refer to the tests to see how it's done.
+django-changuito, is a simple cart based on django-cart, it allows you to have
+a session cart for logged and not logged users, it's born from the need of features
+that weren't available on django-cart and the previous main developer seems to
+doesn't have more free time, we are very thankful for his work but we don't
+want to maintain our own version of django-cart we choose to put our changes
+and make it open source on a public repo and a make a python package for it.
+
+We are already using it on production system and we want to encourage 
 
 ## Prerequisites
 
@@ -19,36 +26,35 @@ python setup.py install
 or
 
 ```
-pip install django-cart
+pip install django-changuito
 ```
 
 After installation is complete:
 
-1. add 'cart' to your INSTALLED_APPS directive and
-2. If you have South migrations type: `./manage.py migrate cart`
-3. or if you don't: `./manage.py syncdb`
+1. add 'changuito' to your INSTALLED_APPS directive and
+2. Syncronize the DB: `./manage.py syncdb`
 
 ## Usage
 
-A basic usage of django-cart could be (example):
+A basic usage of django-changuito could be (example):
 
 ```python
 # views.py
-from cart import Cart
+from cart import CartProxy
 from myproducts.models import Product
 
 def add_to_cart(request, product_id, quantity):
     product = Product.objects.get(id=product_id)
-    cart = Cart(request)
+    cart = CartProxy(request)
     cart.add(product, product.unit_price, quantity)
 
 def remove_from_cart(request, product_id):
     product = Product.objects.get(id=product_id)
-    cart = Cart(request)
+    cart = CartProxy(request)
     cart.remove(product)
 
 def get_cart(request):
-    return render_to_response('cart.html', dict(cart=Cart(request)))
+    return render_to_response('cart.html', dict(cart=CartProxy(request)))
 ```
 
 ```django
@@ -59,12 +65,14 @@ def get_cart(request):
     <table>
         <tr>
             <th>Product</th>
+            <th>Description</th>
             <th>Quantity</th>
             <th>Total Price</th>
         </tr>
         {% for item in cart %}
         <tr>
             <td>{{ item.product.name }}</td>
+            <td>{{ item.product.description }}</td>
             <td>{{ item.quantity }}</td>
             <td>{{ item.total_price }}</td>
         </tr>
@@ -75,15 +83,16 @@ def get_cart(request):
 
 ## Some Info
 
+From the original project were I based, sadly I just renamed the project since
+is not officialy dead and continued my work on this project
+
+```
 This project was abandoned and I got it and added tests and South migrations, and I will be maintaining it from now on. 
-
-## Known Problems
-
-Right now the main problem is that it adds a database record for each cart it creates. I'm in the process of studying this and will soon implement something to handle it.
+```
 
 
 ## A note on the authors of this project
 
-This project is a fork of [django-cart](http://code.google.com/p/django-cart/ "django-cart") on Google Code. It was originally started by Eric Woudenberg and followed up by Marc Garcia <http://vaig.be>. The last change ocurred in March 25 2009, without any tests. My goal is to push this project a little further by adding tests to guarantee it's functionality and to fix the main issues. I intend to keep it as simple as it is.
+This project is a fork of django-cart which was originally started by Eric Woudenberg and followed up by Marc Garcia <http://vaig.be>, and then continued by Bruno Carvalho, which adds a lot of stuff and then wasn't much aware of the status of the project.
+The last change ocurred in Jan 29 2012. Bruno and other authors added tests and cool stuff and we are thankful for that, and we will continue with that spirit.
 
-- Bruno Carvalho

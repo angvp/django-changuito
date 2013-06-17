@@ -7,20 +7,20 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
-        name='django-cart',
-        version='1.0.1',
-        description='Django simple shopping cart, tests and south migrations included',
+        name='django-changuito',
+        version='1.0',
+        description='A fork of django-cart with the same simplicity but updated',
         maintainer='Bruno Carvalho',
-        maintainer_email='bmentges@gmail.com',
-        license="GNU v3",
-        url='https://github.com/bmentges/django-cart',
-        packages=['cart'],
+        maintainer_email='angvp@archlinux.org',
+        license="LGPL v3",
+        url='https://github.com/angvp/django-changuito',
+        packages=['changuito'],
         classifiers=[
             "Development Status :: 5 - Production/Stable",
             "Environment :: Web Environment",
             "Framework :: Django",
             "Intended Audience :: Developers",
-            "License :: OSI Approved :: BSD License",
+            "License :: OSI Approved :: LGPL",
             "Operating System :: OS Independent",
             "Programming Language :: Python",
             "Topic :: Software Development :: Libraries :: Python Modules",
