@@ -1,1 +1,1 @@
-from cart import Cart, ItemAlreadyExists, ItemDoesNotExist
+from proxy import CartProxy, ItemAlreadyExists, ItemDoesNotExist

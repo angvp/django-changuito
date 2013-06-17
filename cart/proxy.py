@@ -28,7 +28,7 @@ class UserDoesNotExist(Exception):
     pass
 
 
-class Cart:
+class CartProxy:
     def __init__(self, request):
         user = request.user
         #First search by user
