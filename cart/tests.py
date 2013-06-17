@@ -5,7 +5,7 @@ import datetime
 from decimal import Decimal
 from django.http import HttpRequest
 
-from cart import Cart as CartManager
+from cart import CartProxy
 
 
 class CartAndItemModelsTestCase(TestCase):
@@ -135,7 +135,7 @@ class CartAndItemModelsTestCase(TestCase):
         self.assertEquals(cart.total_price(), 400)
 
 
-class CartManagerTestCase(TestCase):
+class CartProxyTestCase(TestCase):
     # Let's re-use some functions from the Model Test :)
     def _create_cart_in_request(self, creation_date=datetime.datetime.now(),
             checked_out=False):
@@ -145,7 +145,7 @@ class CartManagerTestCase(TestCase):
         r = HttpRequest()
         r.session = {}
         r.user = AnonymousUser()
-        cart = CartManager(r)
+        cart = CartProxy(r)
         return cart
 
     def _create_item_in_database(self, cart, product, quantity=1,
