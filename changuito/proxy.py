@@ -86,16 +86,11 @@ class CartProxy:
             item.quantity += quantity
             item.save()
 
-    def remove(self, product):
+    def remove_item(self, item_id):
         try:
-            item = models.Item.objects.get(
-                cart=self.cart,
-                product=product,
-            )
+            self.cart.item_set.filter(id=item_id).delete()
         except models.Item.DoesNotExist:
             raise ItemDoesNotExist
-        else:
-            item.delete()
 
     def update(self, product, quantity, unit_price=None):
         try:
@@ -116,6 +111,10 @@ class CartProxy:
             pass
 
     def merge(self, cart_id, new_user):
+        # TODO: Replace where I used merge in favour or replace
+        return self.replace(self, cart_id, new_user)
+
+    def replace(self, cart_id, new_user):
         try:
             self.delete_old_cart(new_user)
             cart = models.Cart.objects.get(pk=cart_id)
@@ -126,7 +125,6 @@ class CartProxy:
             raise CartDoesNotExist
 
         return None
-
 
     def clear(self):
         for item in self.cart.item_set.all():

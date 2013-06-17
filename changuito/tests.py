@@ -5,7 +5,7 @@ import datetime
 from decimal import Decimal
 from django.http import HttpRequest
 
-from cart import CartProxy
+from proxy import CartProxy
 
 
 class CartAndItemModelsTestCase(TestCase):
@@ -197,6 +197,13 @@ class CartProxyTestCase(TestCase):
         item = self._create_item_in_database(cart.cart, product=user, quantity=3, unit_price=100)
         self.assertEquals(cart.cart.is_empty(), False)
         cart.clear()
+        self.assertEquals(cart.cart.is_empty(), True)
+
+    def test_cart_remove_item(self):
+        cart = self._create_cart_in_request()
+        user = self._create_user_in_database()
+        item = self._create_item_in_database(cart.cart, product=user, quantity=3, unit_price=100)
+        cart.remove_item(item.id)
         self.assertEquals(cart.cart.is_empty(), True)
 
 
