@@ -10,7 +10,7 @@ setup(
         name='django-changuito',
         version='1.0',
         description='A fork of django-cart with the same simplicity but updated',
-        maintainer='Bruno Carvalho',
+        maintainer='Angel Velasquez',
         maintainer_email='angvp@archlinux.org',
         license="LGPL v3",
         url='https://github.com/angvp/django-changuito',
