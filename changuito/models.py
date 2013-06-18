@@ -65,7 +65,7 @@ class Item(models.Model):
         return self.content_type.get_object_for_this_type(id=self.object_id)
 
     def set_product(self, product):
-        self.content_type = ContentType.objects.get_for_model(type(product))
+        self.content_type = ContentType.objects.get_for_model(type(product), for_concrete_model=False)
         self.object_id = product.pk
 
     product = property(get_product, set_product)
