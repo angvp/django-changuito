@@ -32,7 +32,7 @@ class Cart(models.Model):
 class ItemManager(models.Manager):
     def get(self, *args, **kwargs):
         if 'product' in kwargs:
-            kwargs['content_type'] = ContentType.objects.get_for_model(type(kwargs['product']))
+            kwargs['content_type'] = ContentType.objects.get_for_model(type(kwargs['product']), for_concrete_model=False)
             kwargs['object_id'] = kwargs['product'].pk
             del(kwargs['product'])
         return super(ItemManager, self).get(*args, **kwargs)
