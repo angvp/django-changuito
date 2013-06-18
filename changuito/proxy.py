@@ -133,3 +133,11 @@ class CartProxy:
     def clear(self):
         for item in self.cart.item_set.all():
             item.delete()
+
+    def get_item(self, item):
+        try:
+            obj = models.Item.objects.get(pk=item)
+        except models.Item.DoesNotExist:
+            raise ItemDoesNotExist
+
+        return obj

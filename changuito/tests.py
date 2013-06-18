@@ -111,18 +111,47 @@ class CartAndItemModelsTestCase(TestCase):
 
         self.assertEquals(item.__unicode__(), "%s units of User %s" % (3, user.id))
 
-    def test_cart_is_empty(self):
-        cart = self._create_cart_in_database()
-
-        self.assertEquals(cart.is_empty(), True)
-
-    def test_cart_is_really_empty(self):
+    def test_item_update_quantity(self):
         user = self._create_user_in_database()
         cart = self._create_cart_in_database()
 
+        item = self._create_item_in_database(cart, product=user, quantity=3, unit_price=Decimal("100"))
+        self.assertEquals(item.quantity, 3)
+        item.update_quantity(7)
+        self.assertEquals(item.quantity, 7)
+
+    def test_item_update_contenttype(self):
+        # Let's import different contenttype objects
+        from django.contrib.contenttypes.models import ContentType
+        from django.contrib.sites.models import Site
+        obj_user = self._create_user_in_database()
+        obj_site = Site.objects.all()[:1]
+
+        ctype_user = ContentType.objects.get_for_model(type(obj_user))
+        ctype_site = ContentType.objects.get_for_model(type(obj_site[0]))
+
+        cart = self._create_cart_in_database()
+
+        item_user = self._create_item_in_database(cart, product=obj_user, quantity=1, unit_price=Decimal("100"))
+        item_site = self._create_item_in_database(cart, product=obj_site[0], quantity=2, unit_price=Decimal("100"))
+
+        self.assertEquals(item_user.content_type, ctype_user)
+        self.assertEquals(item_site.content_type, ctype_site)
+
+        item_site.update_contenttype(ctype_user.id)
+        self.assertEquals(item_site.quantity, 3)
+        self.assertEquals(item_site.total_price, 300)
+
+
+
+    def test_cart_is_empty(self):
+        cart = self._create_cart_in_database()
+        self.assertEquals(cart.is_empty(), True)
+
+        user = self._create_user_in_database()
+        cart = self._create_cart_in_database()
         self._create_item_in_database(cart, product=user, quantity=2, unit_price=Decimal("100"))
         self._create_item_in_database(cart, product=user, quantity=1, unit_price=Decimal("90"))
-
         self.assertEquals(cart.is_empty(), False)
 
     def test_cart_total_price(self):
@@ -206,4 +235,10 @@ class CartProxyTestCase(TestCase):
         cart.remove_item(item.id)
         self.assertEquals(cart.cart.is_empty(), True)
 
-
+    def test_proxy_get_item(self):
+        cart = self._create_cart_in_request()
+        user = self._create_user_in_database()
+        item = self._create_item_in_database(cart.cart, product=user, quantity=3, unit_price=100)
+        item_copy = cart.get_item(item.id)
+        self.assertEquals(item.id, item_copy.id)
+        self.assertEquals(item.quantity, item_copy.quantity)

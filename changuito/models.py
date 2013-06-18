@@ -69,3 +69,23 @@ class Item(models.Model):
         self.object_id = product.pk
 
     product = property(get_product, set_product)
+
+    def update_quantity(self, quantity):
+        self.quantity = quantity
+        self.save()
+
+    def update_contenttype(self, ctype_id):
+        new_content_type = ContentType.objects.get(pk=ctype_id)
+        old_content_type = self.content_type
+        # Let's search if the new contenttype had previous items on the cart
+        try:
+            new_items = Item.objects.get(cart=self.cart,
+                    object_id=self.object_id,
+                    content_type=new_content_type)
+            self.quantity += new_items.quantity
+            new_items.delete()
+        except DoesNotExist:
+            pass
+
+        self.content_type = new_content_type
+        self.save()
