@@ -112,7 +112,7 @@ class CartProxy:
 
     def merge(self, cart_id, new_user):
         # TODO: Replace where I used merge in favour or replace
-        return self.replace(self, cart_id, new_user)
+        return self.replace(cart_id, new_user)
 
     def replace(self, cart_id, new_user):
         try:
