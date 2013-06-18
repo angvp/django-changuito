@@ -2,9 +2,7 @@
 django-changuito
 =================
 
-.. image:: https://travis-ci.org/angvp/django-changuito.png
-   :alt: Build Status
-   :target: https://travis-ci.org/angvp/django-changuito
+[![Build Status](https://travis-ci.org/angvp/django-changuito.png)](https://travis-ci.org/angvp/django-changuito)
 
 # Introduction
 
