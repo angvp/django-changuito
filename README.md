@@ -39,18 +39,23 @@ After installation is complete:
 A basic usage of django-changuito could be (example):
 
 ```python
+#settings.py
+MIDDLEWARE_CLASES += ('changuito.middleware.CartMiddleware', )
+```
+
+
+```python
 # views.py
-from cart import CartProxy
 from myproducts.models import Product
 
-def add_to_cart(request, product_id, quantity):
+def add_to_cart(request, product_id, quantity=1):
     product = Product.objects.get(id=product_id)
-    cart = CartProxy(request)
+    cart = request.cart 
     cart.add(product, product.unit_price, quantity)
 
 def remove_from_cart(request, product_id):
     product = Product.objects.get(id=product_id)
-    cart = CartProxy(request)
+    cart = request.cart 
     cart.remove(product)
 
 def get_cart(request):
