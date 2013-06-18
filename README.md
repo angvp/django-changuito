@@ -1,6 +1,10 @@
+=================
+django-changuito
+=================
+
 .. image:: https://travis-ci.org/angvp/django-changuito.png
    :alt: Build Status
-   :target: https://travis-ci.org/pydanny/django-changuito
+   :target: https://travis-ci.org/angvp/django-changuito
 
 # Introduction
 
@@ -15,7 +19,7 @@ We are already using it on production system and we want to encourage
 
 ## Prerequisites
 
-- Django 1.1+
+- Django 1.3+
 - django content type framework in your INSTALLED_APPS
 - south for migrations (optional)
 
