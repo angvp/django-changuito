@@ -1,3 +1,7 @@
+.. image:: https://travis-ci.org/angvp/django-changuito.png
+   :alt: Build Status
+   :target: https://travis-ci.org/pydanny/django-changuito
+
 # Introduction
 
 django-changuito, is a simple cart based on django-cart, it allows you to have
