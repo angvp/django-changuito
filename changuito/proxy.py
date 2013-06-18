@@ -77,7 +77,7 @@ class CartProxy:
             item = models.Item.objects.get(
                 cart=self.cart,
                 product=product,
-                content_type=product
+                content_type=ctype
             )
         except models.Item.DoesNotExist:
             item = models.Item()
