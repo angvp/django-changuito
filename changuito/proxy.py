@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AnonymousUser
+from django.contrib.contenttypes.models import ContentType
 
 import datetime
 import models
