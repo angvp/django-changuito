@@ -84,7 +84,7 @@ class Item(models.Model):
                     content_type=new_content_type)
             self.quantity += new_items.quantity
             new_items.delete()
-        except DoesNotExist:
+        except self.DoesNotExist:
             pass
 
         self.content_type = new_content_type
