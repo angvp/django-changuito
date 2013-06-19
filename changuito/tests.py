@@ -138,7 +138,7 @@ class CartAndItemModelsTestCase(TestCase):
         self.assertEquals(item_user.content_type, ctype_user)
         self.assertEquals(item_site.content_type, ctype_site)
 
-        item_site.update_contenttype(ctype_user.id)
+        item_site.update_contenttype(obj_user)
         self.assertEquals(item_site.quantity, 3)
         self.assertEquals(item_site.total_price, 300)
 
