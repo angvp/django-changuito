@@ -54,7 +54,7 @@ class Item(models.Model):
         ordering = ('cart',)
 
     def __unicode__(self):
-        return u'%d units of %s %s' % (self.quantity, self.product.__class__.__name__, self.product.id)
+        return u'%d units of %s %s' % (self.quantity, self.product.__class__.__name__, self.product.pk)
 
     def total_price(self):
         return self.quantity * self.unit_price
@@ -62,7 +62,7 @@ class Item(models.Model):
 
     # product
     def get_product(self):
-        return self.content_type.get_object_for_this_type(id=self.object_id)
+        return self.content_type.get_object_for_this_type(pk=self.object_id)
 
     def set_product(self, product):
         self.content_type = ContentType.objects.get_for_model(type(product), for_concrete_model=False)
