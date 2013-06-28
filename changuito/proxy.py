@@ -44,7 +44,8 @@ class CartProxy:
             cart_id = request.session.get(CART_ID)
             if cart_id:
                 try:
-                    cart = models.Cart.objects.get(id=cart_id, checked_out=False)
+                    cart = models.Cart.objects.get(id=cart_id,
+                                                   checked_out=False)
                 except models.Cart.DoesNotExist:
                     cart = self.new(request)
             else:
@@ -72,7 +73,9 @@ class CartProxy:
 
     def add(self, product, unit_price, quantity=1):
         try:
-            ctype = ContentType.objects.get_for_model(type(product), for_concrete_model=False)
+            ctype = ContentType.objects.get_for_model(
+                type(product),
+                for_concrete_model=False)
 
             item = models.Item.objects.get(
                 cart=self.cart,
@@ -114,9 +117,8 @@ class CartProxy:
         except models.Cart.DoesNotExist:
             pass
 
-    def merge(self, cart_id, new_user):
-        # TODO: Replace where I used merge in favour or replace
-        return self.replace(cart_id, new_user)
+    def is_empty(self):
+        return self.cart.is_empty()
 
     def replace(self, cart_id, new_user):
         try:
