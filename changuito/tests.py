@@ -83,101 +83,69 @@ class CartItemsTestCase(TestCase):
 
 class CartProxyTestCase(TestCase):
     def setUp(self):
+        anon_user = AnonymousUser()
         r = HttpRequest()
         r.session = {}
         r.user = anon_user
         cart = CartProxy(r)
-        self.anon_user = AnonymousUser()
-        self.cart = cart
+        self.anon_user = anon_user
+        self.cart_model = cart.get_cart(r)
+        self.cart_proxy = cart
         self.user = User.objects.create(username="user_for_sell",
                 password="sold", email="example@example.com")
         self.request = r
 
     def _create_item_in_request(self):
-        self.cart.add(product=self.user, unit_price=Decimal("125"), quantity=1)
+        self.cart_proxy.add(product=self.user, unit_price=Decimal("125"), quantity=1)
 
     def _create_item_in_db(self, product=None, quantity=2, unit_price=125):
         product = self.user if product is None else product
-        item = Item.objects.create(cart=self.cart, product=product,
+        item = Item.objects.create(cart=self.cart_model, product=product,
                 quantity=quantity, unit_price=unit_price)
         return item
 
-
-class CartMiddlewareTestCase(TestCase):
-    pass
-
-
-"""
-
-class CartProxyTestCase(TestCase):
-    # Let's re-use some functions from the Model Test :)
-    def _create_item_in_database(self, cart, product, quantity=1,
-            unit_price=Decimal("100")):
-        item = Item()
-        item.cart = cart
-        item.product = product
-        item.quantity = quantity
-        item.unit_price = unit_price
-        item.save()
-
-        return item
-
-    def _create_item_in_request(self, cart_request):
-        user = self._create_user_in_database()
-        cart_request.add(product=user, unit_price=Decimal("125"), quantity=1)
-
-    def _create_user_in_database(self):
-        user = User(username="user_for_sell", password="sold",
-                email="example@example.com")
-        user.save()
-        return user
-
-    def test_cart_in_request(self):
-        cart = self._create_cart_in_request()
-        self.assertEquals(cart.cart.id, 1)
-
-    def test_cart_user_is_anonymous(self):
-        cart = self._create_cart_in_request()
-        self.assertEquals(cart.cart.user, None)
-
     def test_cart_merge_user_anonuser(self):
         # anonymous user
-        cart = self._create_cart_in_request()
+        cart = self.cart_proxy
         # registered user
-        user = self._create_user_in_database()
+        user = self.user
         # lets create an item
-        item = self._create_item_in_database(cart.cart, product=user, quantity=3, unit_price=100)
+        item = self._create_item_in_db(product=user, quantity=3, unit_price=100)
         # lets merge with the user that we created on the db
         cart = cart.replace(cart.cart.id, user)
         self.assertEquals(cart.id, 1)
         self.assertEquals(cart.user, user)
 
     def test_cart_clear(self):
-        cart = self._create_cart_in_request()
-        user = self._create_user_in_database()
-        item = self._create_item_in_database(cart.cart, product=user, quantity=3, unit_price=100)
+        cart = self.cart_proxy
+        user = self.user
+        item = self._create_item_in_db(product=user)
         self.assertEquals(cart.is_empty(), False)
         cart.clear()
         self.assertEquals(cart.is_empty(), True)
 
     def test_cart_add_item(self):
-        cart = self._create_cart_in_request()
-        self._create_item_in_request(cart) # this will create 1 item of 125
+        cart = self.cart_proxy
+        self._create_item_in_request() # this will create 1 item of 125
         self.assertEquals(cart.is_empty(), False)
         self.assertEquals(cart.cart.total_price(), 125)
 
     def test_cart_remove_item(self):
-        cart = self._create_cart_in_request()
-        user = self._create_user_in_database()
-        item = self._create_item_in_database(cart.cart, product=user, quantity=3, unit_price=100)
+        cart = self.cart_proxy
+        user = self.user
+        item = self._create_item_in_db(product=user)
         cart.remove_item(item.id)
         self.assertEquals(cart.is_empty(), True)
 
     def test_proxy_get_item(self):
-        cart = self._create_cart_in_request()
-        user = self._create_user_in_database()
-        item = self._create_item_in_database(cart.cart, product=user, quantity=3, unit_price=100)
+        cart = self.cart_proxy
+        user = self.user
+        item = self._create_item_in_db(product=user)
         item_copy = cart.get_item(item.id)
         self.assertEquals(item.id, item_copy.id)
         self.assertEquals(item.quantity, item_copy.quantity)
-"""
+
+
+
+class CartMiddlewareTestCase(TestCase):
+    pass
