@@ -10,4 +10,4 @@ install:
   - pip install -q Django==$DJANGO --use-mirrors
   - pip install -e git://github.com/angvp/django-changuito.git#egg=django-changuito
 script:
-  - python manage.py test
+  - python setup.py test
