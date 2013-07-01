@@ -148,8 +148,8 @@ class CartProxy:
         try:
             cart = models.Cart.objects.get(user=user, checked_out=False)
         except models.Cart.DoesNotExist:
-            self.cart.cart.user = user
-            self.cart.cart.save()
+            self.cart.user = user
+            self.cart.save()
             cart = self.cart
 
         return cart
