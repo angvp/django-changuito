@@ -9,7 +9,7 @@ def read(fname):
 
 setup(
         name='django-changuito',
-        version='0.1',
+        version='0.2',
         description='A fork of django-cart with the same simplicity but up-to-date',
         maintainer='Angel Velasquez',
         maintainer_email='angvp@archlinux.org',
