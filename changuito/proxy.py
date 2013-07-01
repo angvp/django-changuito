@@ -6,7 +6,7 @@ import models
 try:
     from django.contrib.auth import get_user_model
     User = get_user_model()
-except:
+except ImportError as e:
     from django.contrib.auth.models import User
 
 
@@ -143,3 +143,13 @@ class CartProxy:
             raise ItemDoesNotExist
 
         return obj
+
+    def get_last_cart(self, user):
+        try:
+            cart = models.Cart.objects.get(user=user, checked_out=False)
+        except models.Cart.DoesNotExist:
+            self.cart.cart.user = user
+            self.cart.cart.save()
+            cart = self.cart
+
+        return cart
