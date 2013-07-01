@@ -7,7 +7,7 @@ def merge_cart(sender, user, request, **kwargs):
     if not cart.is_empty():
         cart.replace(cart.cart.id, user)
     else:
-        request.cart = cart.__init__(request)
+        request.cart = cart.get_last_cart(user)
 
 
 user_logged_in.connect(merge_cart)
