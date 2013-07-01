@@ -2,4 +2,4 @@
 *.pyc
 build
 dist
-django_cart.egg-info
+django_changuito.egg-info
