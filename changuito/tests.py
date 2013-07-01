@@ -155,4 +155,13 @@ class CartProxyTestCase(TestCase):
 
 
 class CartMiddlewareTestCase(TestCase):
-    pass
+    def setUp(self):
+        self.cm = CartMiddleware()
+        r = HttpRequest()
+        r.session = {}
+        r.user = AnonymousUser()
+        self.request = r
+
+    def test_process_request_without_cart(self):
+        self.assertEqual(self.cm.process_request(self.request), None)
+        self.assertIsInstance(self.request.cart, CartProxy)
