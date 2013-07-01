@@ -153,3 +153,15 @@ class CartProxy:
             cart = self.cart
 
         return cart
+
+    def checkout(self):
+        cart = self.cart
+        try:
+            cart.checked_out = True
+            cart.save()
+        except models.Cart.DoesNotExist:
+            pass
+
+        return cart
+
+

@@ -145,6 +145,13 @@ class CartProxyTestCase(TestCase):
         self.assertEquals(item.id, item_copy.id)
         self.assertEquals(item.quantity, item_copy.quantity)
 
+    def test_proxy_cart_checkout(self):
+        cart = self.cart_proxy
+        user = self.user
+        item = self._create_item_in_db(product=user)
+        cart.checkout()
+        self.assertEquals(cart.cart.checked_out, True)
+
 
 
 class CartMiddlewareTestCase(TestCase):
