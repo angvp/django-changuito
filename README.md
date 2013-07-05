@@ -17,7 +17,7 @@ We are already using it on production system and we want to encourage
 
 ## Prerequisites
 
-- Django 1.3+
+- Django 1.5+
 - django content type framework in your INSTALLED_APPS
 - south for migrations (optional)
 
