@@ -8,7 +8,6 @@ env:
   - DJANGO=1.5.1
 install:
   - pip install -q Django==$DJANGO --use-mirrors
-  - pip install -q git://github.com/angvp/django-changuito.git#egg=django-changuito
   - pip install -q nose --use-mirrors
   - pip install -q django-nose --use-mirrors
   - pip install -e . --use-mirrors
