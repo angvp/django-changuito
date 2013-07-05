@@ -11,5 +11,6 @@ install:
   - pip install -q git://github.com/angvp/django-changuito.git#egg=django-changuito
   - pip install -q nose --use-mirrors
   - pip install -q django-nose --use-mirrors
+  - pip install -e . --use-mirrors
 script:
   - python runtests.py
