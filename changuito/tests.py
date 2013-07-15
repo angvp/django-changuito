@@ -80,6 +80,12 @@ class CartItemsTestCase(TestCase):
         self.assertEquals(item_site.quantity, 3)
         self.assertEquals(item_site.total_price, 300)
 
+    def test_item_update_price(self):
+        item = self._create_item_in_db()
+        item.update_price(137)
+
+        self.assertEquals(item.unit_price, 137)
+
 
 class CartProxyTestCase(TestCase):
     def setUp(self):
