@@ -74,6 +74,10 @@ class Item(models.Model):
         self.quantity = quantity
         self.save()
 
+    def update_price(self, price):
+        self.unit_price = price
+        self.save()
+
     def update_contenttype(self, ctype_obj):
         new_content_type = ContentType.objects.get_for_model(type(ctype_obj), for_concrete_model=False)
         old_content_type = self.content_type
