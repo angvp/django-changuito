@@ -1,13 +1,16 @@
-from django.contrib.auth.models import AnonymousUser
 from django.contrib.contenttypes.models import ContentType
 
-import datetime
 import models
 try:
     from django.contrib.auth import get_user_model
     User = get_user_model()
 except ImportError as e:
     from django.contrib.auth.models import User
+
+try:
+    from django.utils import timezone
+except ImportError:
+    from datetime import datetime as timezone
 
 
 CART_ID = 'CART-ID'
@@ -44,8 +47,7 @@ class CartProxy:
             cart_id = request.session.get(CART_ID)
             if cart_id:
                 try:
-                    cart = models.Cart.objects.get(id=cart_id,
-                                                   checked_out=False)
+                    cart = models.Cart.objects.get(id=cart_id, checked_out=False)
                 except models.Cart.DoesNotExist:
                     cart = self.new(request)
             else:
@@ -66,22 +68,15 @@ class CartProxy:
         return cart
 
     def new(self, request):
-        cart = models.Cart(creation_date=datetime.datetime.now())
+        cart = models.Cart(creation_date=timezone.now())
         cart.save()
         request.session[CART_ID] = cart.id
         return cart
 
     def add(self, product, unit_price, quantity=1):
         try:
-            ctype = ContentType.objects.get_for_model(
-                type(product),
-                for_concrete_model=False)
-
-            item = models.Item.objects.get(
-                cart=self.cart,
-                product=product,
-                content_type=ctype
-            )
+            ctype = ContentType.objects.get_for_model(type(product), for_concrete_model=False)
+            item = models.Item.objects.get(cart=self.cart, product=product, content_type=ctype)
         except models.Item.DoesNotExist:
             item = models.Item()
             item.cart = self.cart
@@ -101,10 +96,7 @@ class CartProxy:
 
     def update(self, product, quantity, unit_price=None):
         try:
-            item = models.Item.objects.get(
-                cart=self.cart,
-                product=product,
-            )
+            item = models.Item.objects.get(cart=self.cart, product=product)
             item.quantity = quantity
             item.save()
         except models.Item.DoesNotExist:
@@ -163,5 +155,3 @@ class CartProxy:
             pass
 
         return cart
-
-
