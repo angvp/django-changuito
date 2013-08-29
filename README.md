@@ -2,14 +2,10 @@
 django-changuito
 =================
 
-.. image: https://travis-ci.org/angvp/django-changuito.png
-    :target: https://tracis-ci.org/angvp/django-changuito
+[![Build Status](https://travis-ci.org/angvp/django-changuito.png)](https://travis-ci.org/angvp/django-changuito)
+[![PyPI Version](https://pypip.in/v/django-changuito/badge.png)](https://crate.io/packages/django-changuito)
+[![Total Downloads](https://pypip.in/d/django-changuito/badge.png)](https://crate.io/packages/django-changuito)
 
-.. image:: https://pypip.in/v/django-changuito/badge.png
-    :target: https://crate.io/packages/django-changuito
-
-.. image:: https://pypip.in/d/django-changuito/badge.png
-    :target: https://crate.io/packages/django-changuito
 
 # Introduction
 
