@@ -1,4 +1,3 @@
-=================
 django-changuito
 =================
 
@@ -13,8 +12,8 @@ django-changuito, is a simple cart based on django-cart, it allows you to have
 a session cart for logged and not logged users, it's born from the need of features
 that weren't available on django-cart and the previous main developer seems to
 doesn't have more free time, we are very thankful for his work but we don't
-want to maintain our own version of django-cart we choose to put our changes
-and make it open source on a public repo and a make a python package for it.
+want to maintain our own version of django-cart, so we forked and did our changes
+and make everything open source on a public repo and uploaded to PyPI.
 
 We are already using it on production and we want to encourage old users
 of django-cart or forked projects of django-cart to migrate to changuito instead.
