@@ -8,10 +8,15 @@ try:
 except ImportError:
     from django.contrib.auth.models import User
 
+try:
+    from django.utils import timezone
+except ImportError:
+    from datetime import datetime as timezone
+
 
 class Cart(models.Model):
     user = models.OneToOneField(User, null=True, blank=True)
-    creation_date = models.DateTimeField(verbose_name=_('creation date'))
+    creation_date = models.DateTimeField(verbose_name=_('creation date'), default=timezone.now)
     checked_out = models.BooleanField(default=False, verbose_name=_('checked out'))
 
     class Meta:
@@ -32,7 +37,8 @@ class Cart(models.Model):
 class ItemManager(models.Manager):
     def get(self, *args, **kwargs):
         if 'product' in kwargs:
-            kwargs['content_type'] = ContentType.objects.get_for_model(type(kwargs['product']), for_concrete_model=False)
+            kwargs['content_type'] = ContentType.objects.get_for_model(type(kwargs['product']),
+                                                                       for_concrete_model=False)
             kwargs['object_id'] = kwargs['product'].pk
             del(kwargs['product'])
         return super(ItemManager, self).get(*args, **kwargs)
@@ -54,7 +60,8 @@ class Item(models.Model):
         ordering = ('cart',)
 
     def __unicode__(self):
-        return u'%d units of %s %s' % (self.quantity, self.product.__class__.__name__, self.product.pk)
+        return u'%d units of %s %s' % (self.quantity, self.product.__class__.__name__,
+                                       self.product.pk)
 
     def total_price(self):
         return self.quantity * self.unit_price
@@ -65,7 +72,8 @@ class Item(models.Model):
         return self.content_type.get_object_for_this_type(pk=self.object_id)
 
     def set_product(self, product):
-        self.content_type = ContentType.objects.get_for_model(type(product), for_concrete_model=False)
+        self.content_type = ContentType.objects.get_for_model(type(product),
+                                                              for_concrete_model=False)
         self.object_id = product.pk
 
     product = property(get_product, set_product)
@@ -79,13 +87,12 @@ class Item(models.Model):
         self.save()
 
     def update_contenttype(self, ctype_obj):
-        new_content_type = ContentType.objects.get_for_model(type(ctype_obj), for_concrete_model=False)
-        old_content_type = self.content_type
+        new_content_type = ContentType.objects.get_for_model(type(ctype_obj),
+                                                             for_concrete_model=False)
         # Let's search if the new contenttype had previous items on the cart
         try:
-            new_items = Item.objects.get(cart=self.cart,
-                    object_id=self.object_id,
-                    content_type=new_content_type)
+            new_items = Item.objects.get(cart=self.cart, object_id=self.object_id,
+                                         content_type=new_content_type)
             self.quantity += new_items.quantity
             new_items.delete()
         except self.DoesNotExist:
