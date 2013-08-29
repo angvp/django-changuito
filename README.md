@@ -2,7 +2,14 @@
 django-changuito
 =================
 
-[![Build Status](https://travis-ci.org/angvp/django-changuito.png)](https://travis-ci.org/angvp/django-changuito)
+.. image: https://travis-ci.org/angvp/django-changuito.png
+    :target: https://tracis-ci.org/angvp/django-changuito
+
+.. image:: https://pypip.in/v/django-changuito/badge.png
+    :target: https://crate.io/packages/django-changuito
+
+.. image:: https://pypip.in/d/django-changuito/badge.png
+    :target: https://crate.io/packages/django-changuito
 
 # Introduction
 
@@ -13,7 +20,8 @@ doesn't have more free time, we are very thankful for his work but we don't
 want to maintain our own version of django-cart we choose to put our changes
 and make it open source on a public repo and a make a python package for it.
 
-We are already using it on production system and we want to encourage 
+We are already using it on production and we want to encourage old users
+of django-cart or forked projects of django-cart to migrate to changuito instead.
 
 ## Prerequisites
 
@@ -94,16 +102,15 @@ def get_cart(request):
 
 ## Some Info
 
-From the original project were I based, sadly I just renamed the project since
+This is from the original project that I've forked, I just renamed the project since
 is not officialy dead and continued my work on this project
 
 ```
-This project was abandoned and I got it and added tests and South migrations, and I will be maintaining it from now on. 
+This project was abandoned and I got it and added tests and South migrations, 
+and I will be maintaining it from now on. 
 ```
-
 
 ## A note on the authors of this project
 
 This project is a fork of django-cart which was originally started by Eric Woudenberg and followed up by Marc Garcia <http://vaig.be>, and then continued by Bruno Carvalho, which adds a lot of stuff and then wasn't much aware of the status of the project.
 The last change ocurred in Jan 29 2012. Bruno and other authors added tests and cool stuff and we are thankful for that, and we will continue with that spirit.
-
