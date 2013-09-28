@@ -53,7 +53,7 @@ class CartItemsTestCase(TestCase):
         obj_site = Site.objects.all()[:1]
         self._create_item_in_db(unit_price=Decimal("400.00"), quantity=3)
         self._create_item_in_db(product=obj_site[0], unit_price=Decimal("100.00"), quantity=1)
-        self.assertEquals(self.cart.total_quantity, 4)
+        self.assertEquals(self.cart.total_quantity(), 4)
 
     def test_cart_item_price(self):
         item = self._create_item_in_db(quantity=4,
