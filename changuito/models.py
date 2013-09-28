@@ -33,6 +33,8 @@ class Cart(models.Model):
     def total_price(self):
         return sum(i.total_price for i in self.item_set.all())
 
+    def total_quantity(self):
+        return sum(i.quantity for i in self.item_set.all())
 
 class ItemManager(models.Manager):
     def get(self, *args, **kwargs):
