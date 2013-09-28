@@ -40,7 +40,7 @@ class CartProxy:
             try:
                 cart = models.Cart.objects.get(user=user)
             except models.Cart.DoesNotExist:
-                cart = self.new(request)
+                cart = self.new(request, user=user)
             self.cart = cart
         #If not, search by request id
         else:
@@ -67,8 +67,8 @@ class CartProxy:
             cart = None
         return cart
 
-    def new(self, request):
-        cart = models.Cart(creation_date=timezone.now())
+    def new(self, request, user=None):
+        cart = models.Cart(creation_date=timezone.now(), user=user)
         cart.save()
         request.session[CART_ID] = cart.id
         return cart
