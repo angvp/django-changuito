@@ -20,9 +20,13 @@ settings.configure(
 )
 
 from django_nose import NoseTestSuiteRunner
+from django.test.utils import get_runner
 
-test_runner = NoseTestSuiteRunner(verbosity=1)
-failures = test_runner.run_tests(["changuito"])
 
-if failures:
+def runtests():
+    test_runner = NoseTestSuiteRunner(verbosity=1, interactive=True, failfast=False)
+    failures = test_runner.run_tests(["changuito"])
     sys.exit(failures)
+
+if __name__ == '__main__':
+    runtests()
