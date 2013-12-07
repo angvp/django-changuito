@@ -109,3 +109,7 @@ and I will be maintaining it from now on.
 
 This project is a fork of django-cart which was originally started by Eric Woudenberg and followed up by Marc Garcia <http://vaig.be>, and then continued by Bruno Carvalho, which adds a lot of stuff and then wasn't much aware of the status of the project.
 The last change ocurred in Jan 29 2012. Bruno and other authors added tests and cool stuff and we are thankful for that, and we will continue with that spirit.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/angvp/django-changuito/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
