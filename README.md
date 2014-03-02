@@ -63,9 +63,8 @@ def add_to_cart(request, product_id, quantity=1):
     cart.add(product, product.unit_price, quantity)
 
 def remove_from_cart(request, product_id):
-    product = Product.objects.get(id=product_id)
     cart = request.cart 
-    cart.remove(product)
+    cart.remove(product_id)
 
 def get_cart(request):
     return render_to_response('cart.html', dict(cart=CartProxy(request)))
