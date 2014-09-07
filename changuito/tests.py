@@ -168,6 +168,26 @@ class CartProxyTestCase(TestCase):
         cart.checkout()
         self.assertEquals(cart.cart.checked_out, True)
 
+    def test_new_cart_after_checkout_anon_user(self):
+        cart = self.cart_proxy
+        cart.checkout()
+        self.assertEquals(cart.cart.checked_out, True)
+        cart2 = CartProxy(self.request)
+        self.assertNotEquals(cart.cart, cart2.cart)
+        self.assertEquals(cart2.cart.checked_out, False)
+
+    def test_new_cart_after_checkout_user(self):
+        r = HttpRequest()
+        r.session = {}
+        r.user = self.user
+
+        cart = CartProxy(r)
+        cart.checkout()
+        self.assertEquals(cart.cart.checked_out, True)
+        cart2 = CartProxy(r)
+        self.assertNotEquals(cart.cart, cart2.cart)
+        self.assertEquals(cart2.cart.checked_out, False)
+
 
 class CartMiddlewareTestCase(TestCase):
     def setUp(self):
