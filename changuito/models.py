@@ -48,7 +48,7 @@ class ItemManager(models.Manager):
 
 class Item(models.Model):
     cart = models.ForeignKey(Cart, verbose_name=_('cart'))
-    quantity = models.PositiveIntegerField(verbose_name=_('quantity'))
+    quantity = models.DecimalField(max_digits=18, decimal_places=3, verbose_name=_('quantity'))
     unit_price = models.DecimalField(max_digits=18, decimal_places=2, verbose_name=_('unit price'))
     # product as generic relation
     content_type = models.ForeignKey(ContentType)
@@ -62,11 +62,11 @@ class Item(models.Model):
         ordering = ('cart',)
 
     def __unicode__(self):
-        return u'%d units of %s %s' % (self.quantity, self.product.__class__.__name__,
-                                       self.product.pk)
+        return u'{0} units of {1} {2}'.format(self.quantity, self.product.__class__.__name__,
+                                              self.product.pk)
 
     def total_price(self):
-        return self.quantity * self.unit_price
+        return float(self.quantity) * float(self.unit_price)
     total_price = property(total_price)
 
     # product

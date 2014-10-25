@@ -58,7 +58,7 @@ class CartItemsTestCase(TestCase):
     def test_cart_item_price(self):
         item = self._create_item_in_db(quantity=4,
                                        unit_price=Decimal("3.20"))
-        self.assertEquals(item.total_price, Decimal("12.80"))
+        self.assertEquals(float(item.total_price), float("12.80"))
 
     def test_item_unicode(self):
         item = self._create_item_in_db()
