@@ -1,11 +1,6 @@
 from django.contrib.contenttypes.models import ContentType
 
 import models
-try:
-    from django.contrib.auth import get_user_model
-    User = get_user_model()
-except ImportError as e:
-    from django.contrib.auth.models import User
 
 try:
     from django.utils import timezone
