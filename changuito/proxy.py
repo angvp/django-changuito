@@ -35,24 +35,19 @@ class UserDoesNotExist(Exception):
 class CartProxy:
     def __init__(self, request):
         user = request.user
-        #First search by user
-        if not user.is_anonymous():
-            try:
-                cart = models.Cart.objects.get(user=user)
-            except models.Cart.DoesNotExist:
-                cart = self.new(request, user=user)
-            self.cart = cart
-        #If not, search by request id
-        else:
-            cart_id = request.session.get(CART_ID)
-            if cart_id:
-                try:
-                    cart = models.Cart.objects.get(id=cart_id, checked_out=False)
-                except models.Cart.DoesNotExist:
-                    cart = self.new(request)
+        try:
+            #First search by user
+            if not user.is_anonymous():
+                cart = models.Cart.objects.get(user=user, checked_out=False)
+            #If not, search by request id
             else:
-                cart = self.new(request)
-            self.cart = cart
+                user = None
+                cart_id = request.session.get(CART_ID)
+                cart = models.Cart.objects.get(id=cart_id, checked_out=False)
+        except:
+            cart = self.new(request, user=user)
+
+        self.cart = cart
 
     def __iter__(self):
         for item in self.cart.item_set.all():
