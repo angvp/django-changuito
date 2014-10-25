@@ -4,3 +4,4 @@ build
 dist
 django_changuito.egg-info
 *.swp
+.tox
