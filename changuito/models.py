@@ -3,8 +3,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
 
 try:
-    from django.contrib.auth import get_user_model
-    User = get_user_model()
+    from django.conf import settings
+    User = settings.AUTH_USER_MODEL
 except ImportError:
     from django.contrib.auth.models import User
 
@@ -23,6 +23,7 @@ class Cart(models.Model):
         verbose_name = _('cart')
         verbose_name_plural = _('carts')
         ordering = ('-creation_date',)
+        app_label = 'changuito'
 
     def __unicode__(self):
         return "Cart id: %s" % self.id
@@ -60,6 +61,7 @@ class Item(models.Model):
         verbose_name = _('item')
         verbose_name_plural = _('items')
         ordering = ('cart',)
+        app_label = 'changuito'
 
     def __unicode__(self):
         return u'{0} units of {1} {2}'.format(self.quantity, self.product.__class__.__name__,
