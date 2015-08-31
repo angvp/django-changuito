@@ -5,7 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 try:
     from django.conf import settings
     User = settings.AUTH_USER_MODEL
-except ImportError:
+except (ImportError, AttributeError):
     from django.contrib.auth.models import User
 
 try:

@@ -21,6 +21,7 @@ of django-cart or forked projects of django-cart to migrate to changuito instead
 ## Prerequisites
 
 - Django 1.5+
+- Python 2.7 and Python 3.4
 - django content type framework in your INSTALLED_APPS
 - south for migrations (optional)
 

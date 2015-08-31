@@ -1,4 +1,4 @@
-from proxy import CartProxy
+from .proxy import CartProxy
 
 
 class CartMiddleware(object):

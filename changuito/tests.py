@@ -1,12 +1,11 @@
-from django.test import TestCase
-from models import Cart, Item
-from django.contrib.auth.models import User, AnonymousUser
 from decimal import Decimal
+
+from django.contrib.auth.models import AnonymousUser, User
 from django.http import HttpRequest
-
-from proxy import CartProxy
-from middleware import CartMiddleware
-
+from django.test import TestCase
+from .middleware import CartMiddleware
+from .models import Cart, Item
+from .proxy import CartProxy
 
 try:
     from django.utils import timezone
@@ -200,3 +199,4 @@ class CartMiddlewareTestCase(TestCase):
     def test_process_request_without_cart(self):
         self.assertEqual(self.cm.process_request(self.request), None)
         self.assertIsInstance(self.request.cart, CartProxy)
+

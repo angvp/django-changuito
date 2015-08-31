@@ -1,6 +1,6 @@
 from django.contrib.contenttypes.models import ContentType
 
-import models
+from . import models
 
 try:
     from django.utils import timezone
@@ -27,7 +27,7 @@ class UserDoesNotExist(Exception):
     pass
 
 
-class CartProxy:
+class CartProxy(object):
     def __init__(self, request):
         user = request.user
         try:
