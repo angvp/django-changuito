@@ -16,8 +16,10 @@ except ImportError:
 
 class Cart(models.Model):
     user = models.ForeignKey(User, null=True, blank=True)
-    creation_date = models.DateTimeField(verbose_name=_('creation date'), default=timezone.now)
-    checked_out = models.BooleanField(default=False, verbose_name=_('checked out'))
+    creation_date = models.DateTimeField(verbose_name=_('creation date'),
+                                         default=timezone.now)
+    checked_out = models.BooleanField(default=False,
+                                      verbose_name=_('checked out'))
 
     class Meta:
         verbose_name = _('cart')
@@ -37,6 +39,7 @@ class Cart(models.Model):
     def total_quantity(self):
         return sum(i.quantity for i in self.item_set.all())
 
+
 class ItemManager(models.Manager):
     def get(self, *args, **kwargs):
         if 'product' in kwargs:
@@ -49,8 +52,10 @@ class ItemManager(models.Manager):
 
 class Item(models.Model):
     cart = models.ForeignKey(Cart, verbose_name=_('cart'))
-    quantity = models.DecimalField(max_digits=18, decimal_places=3, verbose_name=_('quantity'))
-    unit_price = models.DecimalField(max_digits=18, decimal_places=2, verbose_name=_('unit price'))
+    quantity = models.DecimalField(max_digits=18, decimal_places=3,
+                                   verbose_name=_('quantity'))
+    unit_price = models.DecimalField(max_digits=18, decimal_places=2,
+                                     verbose_name=_('unit price'))
     # product as generic relation
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
@@ -64,7 +69,8 @@ class Item(models.Model):
         app_label = 'changuito'
 
     def __unicode__(self):
-        return u'{0} units of {1} {2}'.format(self.quantity, self.product.__class__.__name__,
+        return u'{0} units of {1} {2}'.format(self.quantity,
+                                              self.product.__class__.__name__,
                                               self.product.pk)
 
     def total_price(self):
@@ -95,7 +101,8 @@ class Item(models.Model):
                                                              for_concrete_model=False)
         # Let's search if the new contenttype had previous items on the cart
         try:
-            new_items = Item.objects.get(cart=self.cart, object_id=self.object_id,
+            new_items = Item.objects.get(cart=self.cart,
+                                         object_id=self.object_id,
                                          content_type=new_content_type)
             self.quantity += new_items.quantity
             new_items.delete()

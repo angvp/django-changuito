@@ -4,12 +4,12 @@ python:
   - "3.4"
 env:
 
-  - DJANGO=1.8
-  - DJANGO=1.7
-  - DJANGO=1.6
-  - DJANGO=1.5
+  - Django<1.9
+  - Django<1.8
+  - Django<1.7
+  - Django<1.6
 install:
-  - pip install -q Django==$DJANGO
+  - pip install -q $DJANGO
   - pip install -q coverage
   - pip install -e .
 script:

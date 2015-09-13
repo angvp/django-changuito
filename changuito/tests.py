@@ -15,13 +15,17 @@ except ImportError:
 
 class CartItemsTestCase(TestCase):
     def setUp(self):
-        self.cart = Cart.objects.create(creation_date=timezone.now(), checked_out=False)
-        self.user = User.objects.create(username="user_for_sell", password="sold",
+        self.cart = Cart.objects.create(creation_date=timezone.now(),
+                                        checked_out=False)
+        self.user = User.objects.create(username="user_for_sell",
+                                        password="sold",
                                         email="example@example.com")
 
     def _create_item_in_db(self, product=None, quantity=2, unit_price=125):
         product = self.user if product is None else product
-        item = Item.objects.create(cart=self.cart, product=product, quantity=quantity,
+        item = Item.objects.create(cart=self.cart,
+                                   product=product,
+                                   quantity=quantity,
                                    unit_price=unit_price)
         return item
 
@@ -51,7 +55,9 @@ class CartItemsTestCase(TestCase):
         from django.contrib.sites.models import Site
         obj_site = Site.objects.all()[:1]
         self._create_item_in_db(unit_price=Decimal("400.00"), quantity=3)
-        self._create_item_in_db(product=obj_site[0], unit_price=Decimal("100.00"), quantity=1)
+        self._create_item_in_db(product=obj_site[0],
+                                unit_price=Decimal("100.00"),
+                                quantity=1)
         self.assertEquals(self.cart.total_quantity(), 4)
 
     def test_cart_item_price(self):
@@ -61,7 +67,8 @@ class CartItemsTestCase(TestCase):
 
     def test_item_unicode(self):
         item = self._create_item_in_db()
-        self.assertEquals(item.__unicode__(), "%s units of User %s" % (2, self.user.id))
+        self.assertEquals(item.__unicode__(),
+                          "%s units of User %s" % (2, self.user.id))
 
     def test_item_update_quantity(self):
         item = self._create_item_in_db()
@@ -79,8 +86,11 @@ class CartItemsTestCase(TestCase):
         ctype_user = ContentType.objects.get_for_model(type(obj_user))
         ctype_site = ContentType.objects.get_for_model(type(obj_site[0]))
 
-        item_user = self._create_item_in_db(quantity=1, unit_price=Decimal("100"))
-        item_site = self._create_item_in_db(product=obj_site[0], quantity=2, unit_price=Decimal("100"))
+        item_user = self._create_item_in_db(quantity=1,
+                                            unit_price=Decimal("100"))
+        item_site = self._create_item_in_db(product=obj_site[0],
+                                            quantity=2,
+                                            unit_price=Decimal("100"))
 
         self.assertEquals(item_user.content_type, ctype_user)
         self.assertEquals(item_site.content_type, ctype_site)
@@ -106,16 +116,21 @@ class CartProxyTestCase(TestCase):
         self.anon_user = anon_user
         self.cart_model = cart.get_cart(r)
         self.cart_proxy = cart
-        self.user = User.objects.create(username="user_for_sell", password="sold",
+        self.user = User.objects.create(username="user_for_sell",
+                                        password="sold",
                                         email="example@example.com")
         self.request = r
 
     def _create_item_in_request(self):
-        self.cart_proxy.add(product=self.user, unit_price=Decimal("125"), quantity=1)
+        self.cart_proxy.add(product=self.user,
+                            unit_price=Decimal("125"),
+                            quantity=1)
 
     def _create_item_in_db(self, product=None, quantity=2, unit_price=125):
         product = self.user if product is None else product
-        item = Item.objects.create(cart=self.cart_model, product=product, quantity=quantity,
+        item = Item.objects.create(cart=self.cart_model,
+                                   product=product,
+                                   quantity=quantity,
                                    unit_price=unit_price)
         return item
 
