@@ -9,7 +9,6 @@ env:
     - TOX_ENV=py27-django1.8
     - TOX_ENV=py34-django1.7
     - TOX_ENV=py34-django1.8
-    - TOX_ENV=stats
 
 install:
   - pip install tox
@@ -18,4 +17,4 @@ script:
   - tox -e $TOX_ENV
 
 after_success:
-  - coveralls
+  - tox -e stats
