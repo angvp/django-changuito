@@ -5,6 +5,8 @@ django-changuito
 [![PyPI Version](https://pypip.in/v/django-changuito/badge.png)](https://crate.io/packages/django-changuito)
 [![Total Downloads](https://pypip.in/d/django-changuito/badge.png)](https://crate.io/packages/django-changuito)
 
+[![Coverage Status](https://coveralls.io/repos/angvp/django-changuito/badge.svg?branch=master&service=github)](https://coveralls.io/github/angvp/django-changuito?branch=master)
+
 
 # Introduction
 
