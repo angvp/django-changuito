@@ -11,10 +11,12 @@ env:
     - TOX_ENV=py34-django1.8
 
 install:
-  - pip install tox
+  - pip install tox coverage coveralls
 
 script:
+  - coverage erase
   - tox -e $TOX_ENV
 
 after_success:
-  - tox -e stats
+  - coverage combine
+  - coveralls
