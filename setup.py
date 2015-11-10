@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='django-changuito',
-    version='0.8',
+    version='1.0',
     description='A fork of django-cart with the same simplicity but up-to-date',
     maintainer='Angel Velasquez',
     maintainer_email='angvp@archlinux.org',

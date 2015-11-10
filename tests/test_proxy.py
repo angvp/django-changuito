@@ -1,105 +1,154 @@
 from decimal import Decimal
 
+from changuito.models import Item
+from changuito.proxy import CartProxy, ItemDoesNotExist
 from django.contrib.auth.models import AnonymousUser, User
 from django.http import HttpRequest
-from django.test import TestCase
-
-from changuito.models import Item
-from changuito.proxy import CartProxy
+import pytest
 
 
-class CartProxyTestCase(TestCase):
-    def setUp(self):
-        anon_user = AnonymousUser()
-        r = HttpRequest()
-        r.session = {}
-        r.user = anon_user
-        cart = CartProxy(r)
-        self.anon_user = anon_user
-        self.cart_model = cart.get_cart(r)
-        self.cart_proxy = cart
-        self.user = User.objects.create(username="user_for_sell",
-                                        password="sold",
-                                        email="example@example.com")
-        self.request = r
+@pytest.fixture
+def anon_user():
+    user = AnonymousUser()
+    return user
 
-    def _create_item_in_request(self):
-        self.cart_proxy.add(product=self.user,
-                            unit_price=Decimal("125"),
-                            quantity=1)
 
-    def _create_item_in_db(self, product=None, quantity=2, unit_price=125):
-        product = self.user if product is None else product
-        item = Item.objects.create(cart=self.cart_model,
-                                   product=product,
-                                   quantity=quantity,
-                                   unit_price=unit_price)
-        return item
+@pytest.fixture
+def reg_user():
+    user = User.objects.create(username="user_for_sell",
+                               password="sold",
+                               email="example@example.com")
+    return user
 
-    def test_cart_merge_user_anonuser(self):
-        # anonymous user
-        cart = self.cart_proxy
-        # registered user
-        user = self.user
-        # lets create an item
-        self._create_item_in_db(product=user, quantity=3, unit_price=100)
-        # lets merge with the user that we created on the db
-        cart = cart.replace(cart.cart.id, user)
-        self.assertEquals(cart.id, 1)
-        self.assertEquals(cart.user, user)
 
-    def test_cart_clear(self):
-        cart = self.cart_proxy
-        user = self.user
-        self._create_item_in_db(product=user)
-        self.assertEquals(cart.is_empty(), False)
-        cart.clear()
-        self.assertEquals(cart.is_empty(), True)
+@pytest.fixture
+def rqst():
+    r = HttpRequest()
+    r.session = {}
+    return r
 
-    def test_cart_add_item(self):
-        cart = self.cart_proxy
-        self._create_item_in_request()  # this will create 1 item of 125
-        self.assertEquals(cart.is_empty(), False)
-        self.assertEquals(cart.cart.total_price(), 125)
 
-    def test_cart_remove_item(self):
-        cart = self.cart_proxy
-        user = self.user
-        item = self._create_item_in_db(product=user)
-        cart.remove_item(item.id)
-        self.assertEquals(cart.is_empty(), True)
+@pytest.fixture
+def rq_anonuser(anon_user, rqst):
+    rqst.user = anon_user
+    cart = CartProxy(rqst)
+    return cart
 
-    def test_proxy_get_item(self):
-        cart = self.cart_proxy
-        user = self.user
-        item = self._create_item_in_db(product=user)
-        item_copy = cart.get_item(item.id)
-        self.assertEquals(item.id, item_copy.id)
-        self.assertEquals(item.quantity, item_copy.quantity)
 
-    def test_proxy_cart_checkout(self):
-        cart = self.cart_proxy
-        user = self.user
-        self._create_item_in_db(product=user)
-        cart.checkout()
-        self.assertEquals(cart.cart.checked_out, True)
+@pytest.mark.django_db
+def _create_item_in_db(user, cart_model, product=None, quantity=2,
+                       unit_price=125):
+    product = user if product is None else product
 
-    def test_new_cart_after_checkout_anon_user(self):
-        cart = self.cart_proxy
-        cart.checkout()
-        self.assertEquals(cart.cart.checked_out, True)
-        cart2 = CartProxy(self.request)
-        self.assertNotEquals(cart.cart, cart2.cart)
-        self.assertEquals(cart2.cart.checked_out, False)
+    item = Item.objects.create(cart=cart_model,
+                               product=product,
+                               quantity=quantity,
+                               unit_price=unit_price)
+    return item
 
-    def test_new_cart_after_checkout_user(self):
-        r = HttpRequest()
-        r.session = {}
-        r.user = self.user
 
-        cart = CartProxy(r)
-        cart.checkout()
-        self.assertEquals(cart.cart.checked_out, True)
-        cart2 = CartProxy(r)
-        self.assertNotEquals(cart.cart, cart2.cart)
-        self.assertEquals(cart2.cart.checked_out, False)
+@pytest.mark.django_db
+def _create_item_in_request(rq_anonuser, reg_user):
+    cart_proxy = rq_anonuser
+    cart_proxy.add(product=reg_user,
+                   unit_price=Decimal("125"),
+                   quantity=1)
+
+
+@pytest.mark.django_db
+def test_cart_merge_user_anonuser(rq_anonuser, reg_user, rqst):
+    # anonymous user
+    cart = rq_anonuser
+    # registered user
+    user = reg_user
+    # cart_model
+    cart_model = rq_anonuser.get_cart(rqst)
+    # lets create an item
+    _create_item_in_db(user=user, cart_model=cart_model, product=user,
+                       quantity=3, unit_price=100)
+    # lets merge with the user that we created on the db
+    cart = cart.replace(cart.cart.id, user)
+    assert cart.id == 1
+    assert cart.user == user
+
+
+@pytest.mark.django_db
+def test_cart_clear(rq_anonuser, reg_user, rqst):
+    cart = rq_anonuser
+    user = reg_user
+    cart_model = rq_anonuser.get_cart(rqst)
+    _create_item_in_db(user=user, cart_model=cart_model, product=user)
+    assert cart.is_empty() is False
+    cart.clear()
+    assert cart.is_empty() is True
+
+
+@pytest.mark.django_db
+def test_cart_add_item(rq_anonuser, reg_user):
+    cart = rq_anonuser
+    # this will create 1 item of 125
+    _create_item_in_request(rq_anonuser, reg_user)
+    assert cart.is_empty() is False
+    assert cart.cart.total_price() == 125
+
+
+@pytest.mark.django_db
+def test_cart_remove_item(rq_anonuser, reg_user, rqst):
+    cart = rq_anonuser
+    user = reg_user
+    cart_model = cart.get_cart(rqst)
+    item = _create_item_in_db(user=user, cart_model=cart_model, product=user)
+    cart.remove_item(item.id)
+    assert cart.is_empty() is True
+
+
+@pytest.mark.django_db
+def test_proxy_get_item(rq_anonuser, reg_user, rqst):
+    cart = rq_anonuser
+    user = reg_user
+    cart_model = cart.get_cart(rqst)
+    item = _create_item_in_db(user=user, cart_model=cart_model, product=user)
+    item_copy = cart.get_item(item.id)
+    assert item.id == item_copy.id
+    assert item.quantity == item_copy.quantity
+
+
+@pytest.mark.django_db
+def test_proxy_cart_checkout(rq_anonuser, reg_user, rqst):
+    cart = rq_anonuser
+    user = reg_user
+    cart_model = cart.get_cart(rqst)
+    _create_item_in_db(user=user, cart_model=cart_model, product=user)
+    cart.checkout()
+    assert cart.cart.checked_out is True
+
+
+@pytest.mark.django_db
+def test_new_cart_after_checkout_anon_user(rq_anonuser, rqst):
+    cart = rq_anonuser
+    cart.checkout()
+    assert cart.cart.checked_out is True
+    cart2 = CartProxy(rqst)
+    assert cart.cart != cart2.cart
+    assert cart2.cart.checked_out is False
+
+
+@pytest.mark.django_db
+def test_new_cart_after_checkout_user(rqst, reg_user):
+    rqst.user = reg_user
+    cart = CartProxy(rqst)
+    cart.checkout()
+    assert cart.cart.checked_out is True
+    cart2 = CartProxy(rqst)
+    assert cart.cart != cart2.cart
+    assert cart2.cart.checked_out is False
+
+
+@pytest.mark.django_db
+def test_cart_remove_unexistent_item(rq_anonuser, rqst):
+    cart = rq_anonuser
+    with pytest.raises(ItemDoesNotExist):
+        cart.remove_item(60)
+
+
+# TODO: test for update method

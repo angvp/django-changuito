@@ -31,10 +31,10 @@ class CartProxy(object):
     def __init__(self, request):
         user = request.user
         try:
-            #First search by user
+            # First search by user
             if not user.is_anonymous():
                 cart = models.Cart.objects.get(user=user, checked_out=False)
-            #If not, search by request id
+            # If not, search by request id
             else:
                 user = None
                 cart_id = request.session.get(CART_ID)
@@ -83,7 +83,7 @@ class CartProxy(object):
 
     def remove_item(self, item_id):
         try:
-            self.cart.item_set.filter(id=item_id).delete()
+            self.cart.item_set.get(id=item_id).delete()
         except models.Item.DoesNotExist:
             raise ItemDoesNotExist
 
