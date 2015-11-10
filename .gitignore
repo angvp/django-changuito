@@ -7,3 +7,4 @@ django_changuito.egg-info
 .tox
 .cache
 .coverage
+.ropeproject
