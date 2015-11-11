@@ -50,9 +50,10 @@ def _create_item_in_db(user, cart_model, product=None, quantity=2,
 @pytest.mark.django_db
 def _create_item_in_request(rq_anonuser, reg_user):
     cart_proxy = rq_anonuser
-    cart_proxy.add(product=reg_user,
-                   unit_price=Decimal("125"),
-                   quantity=1)
+    item = cart_proxy.add(product=reg_user,
+                          unit_price=Decimal("125"),
+                          quantity=1)
+    return item
 
 
 @pytest.mark.django_db
@@ -151,4 +152,14 @@ def test_cart_remove_unexistent_item(rq_anonuser, rqst):
         cart.remove_item(60)
 
 
-# TODO: test for update method
+@pytest.mark.django_db
+def test_cart_update_item(rq_anonuser, reg_user, rqst):
+    cart = rq_anonuser
+    user = reg_user
+    cart_model = cart.get_cart(rqst)
+    item = _create_item_in_db(user=reg_user, cart_model=cart_model,
+                              product=user)
+    assert cart.is_empty() is False
+    assert item.quantity == 2
+    new_cart = cart.update(product=item, quantity=3)
+    assert int(new_cart.item_set.all()[0].quantity) == 3
