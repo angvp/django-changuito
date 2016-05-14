@@ -2,9 +2,6 @@ django-changuito
 =================
 
 [![Build Status](https://travis-ci.org/angvp/django-changuito.png)](https://travis-ci.org/angvp/django-changuito)
-[![PyPI Version](https://pypip.in/v/django-changuito/badge.png)](https://crate.io/packages/django-changuito)
-[![Total Downloads](https://pypip.in/d/django-changuito/badge.png)](https://crate.io/packages/django-changuito)
-
 [![Coverage Status](https://coveralls.io/repos/angvp/django-changuito/badge.svg?branch=master&service=github)](https://coveralls.io/github/angvp/django-changuito?branch=master)
 
 
@@ -22,10 +19,9 @@ of django-cart or forked projects of django-cart to migrate to changuito instead
 
 ## Prerequisites
 
-- Django 1.5+
-- Python 2.7 and Python 3.4
+- Django 1.7+
+- Python 2.7 and Python 3.4+
 - django content type framework in your INSTALLED_APPS
-- south for migrations (optional)
 
 ## Installation
 
@@ -41,10 +37,20 @@ or
 pip install django-changuito
 ```
 
+## Testing
+
+For running the test suite please do:
+
+```
+python setup.py test 
+```
+
+Or simply run tox (if you want to test all the envs)
+
 After installation is complete:
 
 1. add 'changuito' to your INSTALLED_APPS directive and
-2. Syncronize the DB: `./manage.py syncdb`
+2. Syncronize the DB: `./manage.py migrate`
 
 ## Usage
 
@@ -114,4 +120,3 @@ The last change ocurred in Jan 29 2012. Bruno and other authors added tests and 
 
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/angvp/django-changuito/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
