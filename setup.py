@@ -4,7 +4,7 @@ from setuptools import setup
 setup(
     name='django-changuito',
     version='1.0',
-    description='A fork of django-cart with the same simplicity but up-to-date',
+    description='A fork of django-cart with the same simplicity but updated',
     maintainer='Angel Velasquez',
     maintainer_email='angvp@archlinux.org',
     license="LGPL v3",
@@ -19,6 +19,4 @@ setup(
         "Programming Language :: Python",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
-
-    test_suite="runtests.runtests",
 )

@@ -8,7 +8,7 @@ import subprocess
 
 
 PYTEST_ARGS = {
-    'default': ['tests',],
+    'default': ['tests', ],
     'fast': ['tests', '-q'],
 }
 
