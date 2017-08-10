@@ -1,7 +1,8 @@
 from .proxy import CartProxy
+from django.utils.deprecation import MiddlewareMixin
 
 
-class CartMiddleware(object):
+class CartMiddleware(MiddlewareMixin):
 
     def process_request(self, request):
         request.cart = CartProxy(request)
