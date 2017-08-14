@@ -1,5 +1,8 @@
 from .proxy import CartProxy
-from django.utils.deprecation import MiddlewareMixin
+try:
+    from django.utils.deprecation import MiddlewareMixin
+except ImportError:
+    MiddlewareMixin = object
 
 
 class CartMiddleware(MiddlewareMixin):
