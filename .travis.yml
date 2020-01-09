@@ -2,17 +2,9 @@ language: python
 
 sudo: false
 
-env:
-    - TOX_ENV=py27-django1.7
-    - TOX_ENV=py27-django1.8
-    - TOX_ENV=py27-django1.9
-    - TOX_ENV=py27-django1.10
-    - TOX_ENV=py27-django1.11
-    - TOX_ENV=py34-django1.7
-    - TOX_ENV=py34-django1.8
-    - TOX_ENV=py34-django1.9
-    - TOX_ENV=py34-django1.10
-    - TOX_ENV=py34-django1.11
+    - TOX_ENV=py36-django3.0
+    - TOX_ENV=py37-django3.0
+    - TOX_ENV=py38-django3.0
 
 install:
   - pip install tox coverage coveralls
