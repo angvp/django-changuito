@@ -1,4 +1,5 @@
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ObjectDoesNotExist
 
 from . import models
 
@@ -32,14 +33,14 @@ class CartProxy(object):
         user = request.user
         try:
             # First search by user
-            if not user.is_anonymous():
+            if not user.is_anonymous:
                 cart = models.Cart.objects.get(user=user, checked_out=False)
             # If not, search by request id
             else:
                 user = None
                 cart_id = request.session.get(CART_ID)
                 cart = models.Cart.objects.get(id=cart_id, checked_out=False)
-        except:
+        except (ObjectDoesNotExist, models.Cart.DoesNotExist):
             cart = self.new(request, user=user)
 
         self.cart = cart

@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
 
 try:
@@ -15,7 +15,10 @@ except ImportError:
 
 
 class Cart(models.Model):
-    user = models.ForeignKey(User, null=True, blank=True)
+    user = models.ForeignKey(User,
+                             null=True,
+                             blank=True,
+                             on_delete=models.CASCADE)
     creation_date = models.DateTimeField(verbose_name=_('creation date'),
                                          default=timezone.now)
     checked_out = models.BooleanField(default=False,
@@ -24,7 +27,7 @@ class Cart(models.Model):
     class Meta:
         verbose_name = _('cart')
         verbose_name_plural = _('carts')
-        ordering = ('-creation_date',)
+        ordering = ('-creation_date', )
         app_label = 'changuito'
 
     def __unicode__(self):
@@ -43,21 +46,25 @@ class Cart(models.Model):
 class ItemManager(models.Manager):
     def get(self, *args, **kwargs):
         if 'product' in kwargs:
-            kwargs['content_type'] = ContentType.objects.get_for_model(type(kwargs['product']),
-                                                                       for_concrete_model=False)
+            kwargs['content_type'] = ContentType.objects.get_for_model(
+                type(kwargs['product']), for_concrete_model=False)
             kwargs['object_id'] = kwargs['product'].pk
-            del(kwargs['product'])
+            del (kwargs['product'])
         return super(ItemManager, self).get(*args, **kwargs)
 
 
 class Item(models.Model):
-    cart = models.ForeignKey(Cart, verbose_name=_('cart'))
-    quantity = models.DecimalField(max_digits=18, decimal_places=3,
+    cart = models.ForeignKey(Cart,
+                             verbose_name=_('cart'),
+                             on_delete=models.CASCADE)
+    quantity = models.DecimalField(max_digits=18,
+                                   decimal_places=3,
                                    verbose_name=_('quantity'))
-    unit_price = models.DecimalField(max_digits=18, decimal_places=2,
+    unit_price = models.DecimalField(max_digits=18,
+                                     decimal_places=2,
                                      verbose_name=_('unit price'))
     # product as generic relation
-    content_type = models.ForeignKey(ContentType)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
 
     objects = ItemManager()
@@ -65,7 +72,7 @@ class Item(models.Model):
     class Meta:
         verbose_name = _('item')
         verbose_name_plural = _('items')
-        ordering = ('cart',)
+        ordering = ('cart', )
         app_label = 'changuito'
 
     def __unicode__(self):
@@ -75,6 +82,7 @@ class Item(models.Model):
 
     def total_price(self):
         return float(self.quantity) * float(self.unit_price)
+
     total_price = property(total_price)
 
     # product
@@ -82,8 +90,8 @@ class Item(models.Model):
         return self.content_type.get_object_for_this_type(pk=self.object_id)
 
     def set_product(self, product):
-        self.content_type = ContentType.objects.get_for_model(type(product),
-                                                              for_concrete_model=False)
+        self.content_type = ContentType.objects.get_for_model(
+            type(product), for_concrete_model=False)
         self.object_id = product.pk
 
     product = property(get_product, set_product)
@@ -97,8 +105,8 @@ class Item(models.Model):
         self.save()
 
     def update_contenttype(self, ctype_obj):
-        new_content_type = ContentType.objects.get_for_model(type(ctype_obj),
-                                                             for_concrete_model=False)
+        new_content_type = ContentType.objects.get_for_model(
+            type(ctype_obj), for_concrete_model=False)
         # Let's search if the new contenttype had previous items on the cart
         try:
             new_items = Item.objects.get(cart=self.cart,
