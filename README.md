@@ -17,10 +17,19 @@ and make everything open source on a public repo and uploaded to PyPI.
 We are already using it on production and we want to encourage old users
 of django-cart or forked projects of django-cart to migrate to changuito instead.
 
+This was upgrade to the newest Django version, codebase will partially upgraded
+in order to support all the features that Django 3 / Python 3.6+ offers to us,
+as usual PR are accepted :) see [CONTRIBUTING](https://github.com/angvp/CONTRIBUTING.rst). 
+
+# See it live!
+
+[https://django-changuito.herokuapp.com/](https://django-changuito.herokuapp.com/)
+
+
 ## Prerequisites
 
-- Django 1.7, 1.8, 1.9, 1.10, 1.11
-- Python 2.7 and Python 3.4+
+- Django 3.0 
+- Python 3.6+
 - django content type framework in your INSTALLED_APPS
 
 ## Installation
@@ -109,7 +118,7 @@ This is from the original project that I've forked, I just renamed the project s
 is not officialy dead and continued my work on this project
 
 ```
-This project was abandoned and I got it and added tests and South migrations, 
+This project was abandoned and I got it and added tests and migrations, 
 and I will be maintaining it from now on. 
 ```
 
