@@ -1,6 +1,6 @@
 coverage
 coveralls
-flake8>=2.1.0
-tox>=2.1.1
+flake8
+tox
 pytest
 pytest-django
