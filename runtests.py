@@ -6,14 +6,14 @@ import sys
 import os
 import subprocess
 
-
 PYTEST_ARGS = {
-    'default': ['tests', ],
+    'default': [
+        'tests',
+    ],
     'fast': ['tests', '-q'],
 }
 
 FLAKE8_ARGS = ['changuito', 'tests', '--ignore=E501']
-
 
 sys.path.append(os.path.dirname(__file__))
 
