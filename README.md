@@ -21,14 +21,9 @@ This was upgrade to the newest Django version, codebase will partially upgraded
 in order to support all the features that Django 3 / Python 3.6+ offers to us,
 as usual PR are accepted :) see [CONTRIBUTING](https://github.com/angvp/CONTRIBUTING.rst). 
 
-# See it live!
-
-[https://django-changuito.herokuapp.com/](https://django-changuito.herokuapp.com/)
-
-
 ## Prerequisites
 
-- Django 3.0 
+- Django 3.0,3.1 
 - Python 3.6+
 - django content type framework in your INSTALLED_APPS
 
